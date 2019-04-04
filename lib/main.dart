@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'strings.dart';
+import 'constants.dart';
 
 void main() => runApp(FridayApp());
 
@@ -98,16 +98,45 @@ class _FridayPageState extends State<FridayPage> {
     );
   }
 
-  _buillControlPanel() {
-    return Container(
-      color: Color.fromARGB(30, 0, 0, 0),
+  _buildColorController() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text("字体颜色"),
+        ClipOval(
+          child: Container(
+            color: FridayColors.jikeWhite,
+          ),
+        )
+      ],
+    );
+  }
+
+  _buildControlPanel() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      heightFactor: 1.0,
+      child: Container(
+        color: Color.fromARGB(30, 0, 0, 0),
+        child: Column(
+          children: <Widget>[
+            _buildColorController(),
+          ],
+        ),
+      ),
     );
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      body: _buildShowContent(),
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          _buildShowContent(),
+          _buildControlPanel(),
+        ],
+      )
     );
   }
 }
