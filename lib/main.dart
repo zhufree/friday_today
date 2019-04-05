@@ -36,6 +36,7 @@ class FridayPage extends StatefulWidget {
 class _FridayPageState extends State<FridayPage> {
   int langType = 0;
   int fontType = 0;
+  String fontName = "kaiTi";
   Color bgColor = Colors.yellow;
   Color bubbleColor = Colors.white;
   Color textColor = Colors.black54;
@@ -91,27 +92,21 @@ class _FridayPageState extends State<FridayPage> {
               child: Text(
                 Strings.appName,
                 style: TextStyle(
-                  fontSize: 25,
-                  color: textColor,
-                ),
+                    fontSize: 25, color: textColor, fontFamily: fontName),
               ),
             ),
           ),
           Text(
             '是',
-            style: TextStyle(
-              fontSize: 90,
-              color: textColor,
-            ),
+            style:
+                TextStyle(fontSize: 90, color: textColor, fontFamily: fontName),
           ),
           Container(
             margin: EdgeInsets.only(top: 20.0),
             child: Text(
               "${weekdayToString(today.weekday)} ${today.year}.${today.month}.${today.day}",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: textColor,
-              ),
+              style: TextStyle(color: textColor, fontFamily: fontName),
             ),
           ),
         ],
@@ -125,16 +120,173 @@ class _FridayPageState extends State<FridayPage> {
       padding: EdgeInsets.all(12.0),
       color: Color.fromARGB(30, 0, 0, 0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _buildColorController(0),
           _buildColorController(1),
           _buildColorController(2),
+          Container(
+            margin: EdgeInsets.only(bottom: 16.0),
+            child: Wrap(
+              children: _buildFontRow(langType),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _buildCommonButton(
+                    Text(
+                      "正方形",
+                      style: TextStyle(color: FridayColors.jikeWhite),
+                    ),
+                    25.0,
+                    _square),
+                _buildCommonButton(
+                    Text(
+                      "全屏幕",
+                      style: TextStyle(color: FridayColors.jikeWhite),
+                    ),
+                    25.0,
+                    _square),
+                _buildCommonButton(
+                    Text(
+                      "中文",
+                      style: TextStyle(color: FridayColors.jikeWhite),
+                    ),
+                    25.0,
+                    _square),
+                _buildCommonButton(
+                    Text(
+                      "英文",
+                      style: TextStyle(color: FridayColors.jikeWhite),
+                    ),
+                    25.0,
+                    _square),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              children: <Widget>[
+                _buildCommonButton(
+                    Text(
+                      "设为壁纸",
+                      style: TextStyle(
+                          color: FridayColors.jikeWhite, fontSize: 14.0),
+                    ),
+                    40.0,
+                    _square),
+                _buildCommonButton(
+                    Text(
+                      "分享到",
+                      style: TextStyle(
+                        color: FridayColors.jikeWhite,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    40.0,
+                    _square),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              children: <Widget>[
+                _buildCommonButton(
+                    Text(
+                      "周五圈子",
+                      style: TextStyle(
+                          color: FridayColors.jikeWhite, fontSize: 14.0),
+                    ),
+                    40.0,
+                    _square),
+                _buildCommonButton(
+                    Text(
+                      "保存图片",
+                      style: TextStyle(
+                        color: FridayColors.jikeWhite,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    40.0,
+                    _square),
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 
-  /// 绘制切换颜色的三行
+  _square() {
+    print("click");
+  }
+
+  _buildCommonButton(Widget text, double maxHeight, var onClick) {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(right: 8.0),
+        child: Container(
+          constraints: BoxConstraints(maxHeight: maxHeight, maxWidth: 70.0),
+          child: RaisedButton(
+            padding: EdgeInsets.all(0.0),
+            onPressed: () {
+              onClick();
+            },
+//          onPressed: _changeColor(type, color), // 这样写颜色出不来
+            child: text,
+            color: FridayColors.jikeBlue.withAlpha(0xdd),
+            shape: StadiumBorder(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildFontRow(int langType) {
+    List<Widget> fontRows = [];
+    if (langType == 0) {
+      fontRows.add(_buildFontChangeDot(0));
+      fontRows.add(_buildFontChangeDot(-1));
+      fontRows.add(_buildFontChangeDot(-2));
+      fontRows.add(_buildFontChangeDot(-3));
+    } else {}
+    return fontRows;
+  }
+
+  /// 切换字体的按钮
+  _buildFontChangeDot(int fontType) {
+    return Container(
+      margin: EdgeInsets.only(right: 8.0),
+      child: Container(
+        width: 25.0,
+        height: 25.0,
+        child: RaisedButton(
+//          onPressed: _changeColor(type, color), // 这样写颜色出不来
+          padding: EdgeInsets.all(0.0),
+          child: Text(
+            getFontTitleByType(fontType),
+            style: TextStyle(color: FridayColors.jikeWhite),
+          ),
+          onPressed: () {
+            _changeFontType(fontType);
+          },
+          color: FridayColors.jikeBlue,
+          shape: CircleBorder(
+              side: BorderSide(
+            color: Colors.transparent,
+            width: 0,
+          )),
+        ),
+      ),
+    );
+  }
+
+  /// 绘制切换颜色的三行 [type]背景/气泡/字体
   _buildColorController(int type) {
     return Container(
       margin: EdgeInsets.only(bottom: 8.0),
@@ -287,7 +439,8 @@ class _FridayPageState extends State<FridayPage> {
   void _handleSubmitted(int type, String text) {
     _inputController.clear();
     print(int.parse("0x$text"));
-    _changeColor(type, Color(int.parse(text.length == 8?"0x$text":"0xFF$text")));
+    _changeColor(
+        type, Color(int.parse(text.length == 8 ? "0x$text" : "0xFF$text")));
   }
 
   /// 显示自定义颜色的dialog
@@ -317,6 +470,12 @@ class _FridayPageState extends State<FridayPage> {
         );
       },
     );
+  }
+
+  _changeFontType(int fontType) {
+    setState(() {
+      fontName = getFontNameByType(fontType);
+    });
   }
 }
 
@@ -355,5 +514,40 @@ String getTitleByType(type) {
       return "文字";
     default:
       return "背景";
+  }
+}
+
+const int shuType = 0;
+const int fangType = -1;
+const int kaiType = -2;
+const int heiType = -3;
+
+String getFontTitleByType(type) {
+  switch (type) {
+    case shuType:
+      return "书";
+    case fangType:
+      return "仿";
+    case kaiType:
+      return "楷";
+    case heiType:
+      return "黑";
+    default:
+      return "楷";
+  }
+}
+
+String getFontNameByType(type) {
+  switch (type) {
+    case shuType:
+      return "shuSong";
+    case fangType:
+      return "fangSong";
+    case kaiType:
+      return "kaiTi";
+    case heiType:
+      return "heiTi";
+    default:
+      return "kaiTi";
   }
 }
