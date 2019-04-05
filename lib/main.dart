@@ -36,11 +36,10 @@ class FridayPage extends StatefulWidget {
 class _FridayPageState extends State<FridayPage> {
   int langType = 0;
   int fontType = 0;
-  Color bgColor = Colors.white;
+  Color bgColor = Colors.yellow;
   Color bubbleColor = Colors.white;
-  Color textColor = Colors.white;
+  Color textColor = Colors.black54;
   DateTime today = DateTime.now();
-
 
   @override
   void initState() {
@@ -50,21 +49,39 @@ class _FridayPageState extends State<FridayPage> {
     textColor = Color(0xFF000000);
   }
 
-
   @override
   void didUpdateWidget(FridayPage oldWidget) {
     super.didUpdateWidget(oldWidget);
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: bgColor,
+        body: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            _buildShowContent(),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: _buildControlPanel(),
+            )
+          ],
+        ));
+  }
+
+  /// 绘制中间显示的部分
   _buildShowContent() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: 20),
+            margin: EdgeInsets.only(bottom: 20.0),
 //              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            height: 60,
+            height: 60.0,
             decoration: BoxDecoration(
               color: bubbleColor,
               borderRadius: BorderRadius.circular(30.0),
@@ -84,13 +101,17 @@ class _FridayPageState extends State<FridayPage> {
             '是',
             style: TextStyle(
               fontSize: 90,
+              color: textColor,
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.only(top: 20.0),
             child: Text(
               "${weekdayToString(today.weekday)} ${today.year}.${today.month}.${today.day}",
               textAlign: TextAlign.center,
+              style: TextStyle(
+                color: textColor,
+              ),
             ),
           ),
         ],
@@ -98,45 +119,203 @@ class _FridayPageState extends State<FridayPage> {
     );
   }
 
-  _buildColorController() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Text("字体颜色"),
-        ClipOval(
-          child: Container(
-            color: FridayColors.jikeWhite,
-          ),
-        )
-      ],
+  /// 绘制整个控制面板
+  _buildControlPanel() {
+    return Container(
+      padding: EdgeInsets.all(12.0),
+      color: Color.fromARGB(30, 0, 0, 0),
+      child: Column(
+        children: <Widget>[
+          _buildColorController(0),
+          _buildColorController(1),
+          _buildColorController(2),
+        ],
+      ),
     );
   }
 
-  _buildControlPanel() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      heightFactor: 1.0,
+  /// 绘制切换颜色的三行
+  _buildColorController(int type) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Text(
+            "${getTitleByType(type)}颜色",
+            style: TextStyle(
+              fontSize: 12.0,
+            ),
+          ),
+          _buildColorClickDot(type, FridayColors.jikeWhite),
+          _buildColorClickDot(type, FridayColors.jikeYellow),
+          _buildColorClickDot(type, FridayColors.jikeBlue),
+          _buildColorClickDot(type, FridayColors.jikeBlack),
+          Container(
+            height: 30.0,
+            padding: EdgeInsets.all(2.0),
+            margin: EdgeInsets.only(left: 8.0),
+            child: RaisedButton(
+              child: Text(
+                "更多颜色",
+                style: TextStyle(fontSize: 12.0, color: Colors.white),
+              ),
+              onPressed: () => {_showPickColorDialog(type)},
+              color: Colors.black26,
+              shape: StadiumBorder(),
+            ),
+          ),
+          Container(
+            height: 30.0,
+            width: 70.0,
+            padding: EdgeInsets.all(2.0),
+            margin: EdgeInsets.only(left: 8.0),
+            child: RaisedButton(
+              child: Text(
+                "自定义",
+                style: TextStyle(fontSize: 12.0, color: Colors.white),
+              ),
+              onPressed: () => {_showCustomColorDialog(type)},
+              color: Colors.black26,
+              shape: StadiumBorder(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 绘制点击切换颜色的小圆点
+  _buildColorClickDot(int type, Color color) {
+    return Container(
+      margin: EdgeInsets.only(left: 8.0),
       child: Container(
-        color: Color.fromARGB(30, 0, 0, 0),
-        child: Column(
-          children: <Widget>[
-            _buildColorController(),
-          ],
+        width: 20.0,
+        height: 20.0,
+        child: RaisedButton(
+//          onPressed: _changeColor(type, color), // 这样写颜色出不来
+          onPressed: () => {_changeColor(type, color)},
+          color: color,
+          shape: CircleBorder(
+              side: BorderSide(
+            color: Colors.transparent,
+            width: 0,
+          )),
         ),
       ),
     );
   }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: <Widget>[
-          _buildShowContent(),
-          _buildControlPanel(),
-        ],
-      )
+
+  /// 改变颜色的方法
+  _changeColor(int type, Color color) {
+    switch (type) {
+      case bgType:
+        setState(() {
+          bgColor = color;
+        });
+        break;
+      case bubbleType:
+        setState(() {
+          bubbleColor = color;
+        });
+        break;
+      case textType:
+        setState(() {
+          textColor = color;
+        });
+        break;
+    }
+  }
+
+  /// 显示更多颜色的dialog
+  Future<void> _showPickColorDialog(int type) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16.0),
+          title: Text('${getTitleByType(type)}颜色'),
+          content: SingleChildScrollView(
+            child: Center(
+              child: Wrap(
+                spacing: 5.0,
+                runSpacing: 5.0,
+                children: getColorRows(type),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// 更多颜色的颜色方块
+  _buildColorPickDot(int type, Color color) {
+    return GestureDetector(
+      onTap: () => {_changeColor(type, color)},
+      child: Container(
+        child: Container(
+          width: 25.0,
+          height: 25.0,
+          color: color,
+        ),
+      ),
+    );
+  }
+
+  /// 获取更多颜色widget列表
+  List<Widget> getColorRows(int type) {
+    List<Widget> colorRows = [];
+    for (var colorInt in FridayColors.colorList) {
+      colorRows.add(_buildColorPickDot(type, Color(colorInt)));
+    }
+    return colorRows;
+  }
+
+  final TextEditingController _inputController = new TextEditingController();
+
+  void _handleSubmitted(int type, String text) {
+    _inputController.clear();
+    print(int.parse("0x$text"));
+    _changeColor(type, Color(int.parse(text.length == 8?"0x$text":"0xFF$text")));
+  }
+
+  /// 显示自定义颜色的dialog
+  Future<void> _showCustomColorDialog(int type) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16.0),
+          title: Text('自定义${getTitleByType(type)}颜色'),
+          content: TextField(
+            controller: _inputController,
+            decoration: InputDecoration(
+                hintText: "输入不带#号的六位或八位颜色值",
+                hintStyle: TextStyle(fontSize: 12.0)),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                _handleSubmitted(type, _inputController.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -159,5 +338,22 @@ String weekdayToString(day) {
       return "Saturday";
     default:
       return "Friday";
+  }
+}
+
+const int bgType = 0;
+const int bubbleType = 1;
+const int textType = 2;
+
+String getTitleByType(type) {
+  switch (type) {
+    case bgType:
+      return "背景";
+    case bubbleType:
+      return "气泡";
+    case textType:
+      return "文字";
+    default:
+      return "背景";
   }
 }

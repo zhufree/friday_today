@@ -1,20 +1,41 @@
 buildscript {
-    ext.kotlin_version = '1.2.71'
+    ext.kotlin_version = '1.3.21'
     repositories {
         google()
-        jcenter()
+//        jcenter()
+        maven {
+            url "https://maven.aliyun.com/nexus/content/groups/public/"
+        }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+
+    for (p in project.subprojects) {
+        p.buildscript.configurations.classpath.resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21'
+        }
+    }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+//        jcenter()
+        maven {
+            url "https://maven.aliyun.com/nexus/content/groups/public/"
+        }
+    }
+    configurations.all {
+        resolutionStrategy {
+            dependencySubstitution {
+                // Replace the Kotlin old runtime with the new coordinates
+                // Depending on your project more tweaks to the resolution strategy may be needed
+                substitute module('org.jetbrains.kotlin:kotlin-stdlib-jre7') with module('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21')
+            }
+        }
     }
 }
 

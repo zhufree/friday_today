@@ -70,3 +70,16 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+  fonts:
+    - family: fangSong
+      fonts:
+        - asset: fonts/FZFSJW.TTF
+    - family: shuSong
+      fonts:
+        - asset: fonts/FZSSJW.TTF
+    - family: heiTi
+      fonts:
+        - asset: fonts/FZHTJW.TTF
+    - family: kaiTi
+      fonts:
+        - asset: fonts/FZKTJW.TTF
