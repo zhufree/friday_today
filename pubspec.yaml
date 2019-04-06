@@ -23,11 +23,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  path_provider: ^0.5.0
+  url_launcher: ^5.0.2
+  esys_flutter_share: ^1.0.0
+  intl: ^0.15.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  intl_translation: ^0.17.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -83,3 +87,36 @@ flutter:
     - family: kaiTi
       fonts:
         - asset: fonts/FZKTJW.TTF
+    - family: AmaticSC
+      fonts:
+        - asset: fonts/AmaticSC.ttf
+    - family: Courgette
+      fonts:
+        - asset: fonts/Courgette.ttf
+    - family: IndieFlower
+      fonts:
+        - asset: fonts/IndieFlower.ttf
+    - family: Kalam
+      fonts:
+        - asset: fonts/Kalam.ttf
+    - family: Laila
+      fonts:
+        - asset: fonts/Laila.ttf
+    - family: Molle
+      fonts:
+        - asset: fonts/Molle.ttf
+    - family: NovaFlat
+      fonts:
+        - asset: fonts/NovaFlat.ttf
+    - family: PermanentMarker
+      fonts:
+        - asset: fonts/PermanentMarker.ttf
+    - family: PlayfairDisplay
+      fonts:
+        - asset: fonts/PlayfairDisplay.ttf
+    - family: Teko
+      fonts:
+        - asset: fonts/Teko.ttf
+    - family: YanoneKaffeesatz
+      fonts:
+        - asset: fonts/YanoneKaffeesatz.ttf

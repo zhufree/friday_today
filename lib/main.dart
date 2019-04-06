@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'constants.dart';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'i10n/localization_intl.dart';
 
 void main() => runApp(FridayApp());
 
@@ -10,15 +19,6 @@ class FridayApp extends StatelessWidget {
     return MaterialApp(
       title: Strings.appName,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: FridayPage(),
@@ -42,6 +42,11 @@ class _FridayPageState extends State<FridayPage> {
   Color textColor = Colors.black54;
   DateTime today = DateTime.now();
 
+  int screenType = 0;
+
+  GlobalKey screenKey = GlobalKey();
+  GlobalKey scaffoldKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -51,18 +56,30 @@ class _FridayPageState extends State<FridayPage> {
   }
 
   @override
-  void didUpdateWidget(FridayPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-        backgroundColor: bgColor,
+        key: scaffoldKey,
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: <Widget>[
-            _buildShowContent(),
+            Center(
+              child: RepaintBoundary(
+                key: screenKey,
+                child: screenType == 1
+                    ? AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: Container(
+                          color: bgColor,
+                          child: _buildShowContent(),
+                        ),
+                      )
+                    : Container(
+                        color: bgColor,
+                        child: _buildShowContent(),
+                      ),
+              ),
+            ),
             Positioned(
               bottom: 0,
               left: 0,
@@ -75,6 +92,7 @@ class _FridayPageState extends State<FridayPage> {
 
   /// 绘制中间显示的部分
   _buildShowContent() {
+    print(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -126,13 +144,16 @@ class _FridayPageState extends State<FridayPage> {
           _buildColorController(1),
           _buildColorController(2),
           Container(
-            margin: EdgeInsets.only(bottom: 16.0),
-            child: Wrap(
+            height: 30.0,
+            margin: EdgeInsets.only(bottom: 8.0),
+            child: new ListView(
+              padding: EdgeInsets.all(0.0),
+              scrollDirection: Axis.horizontal,
               children: _buildFontRow(langType),
             ),
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 16.0),
+            margin: EdgeInsets.only(bottom: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -142,33 +163,41 @@ class _FridayPageState extends State<FridayPage> {
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
-                    _square),
+                    () => setState(() {
+                          screenType = 1;
+                        })),
                 _buildCommonButton(
                     Text(
                       "全屏幕",
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
-                    _square),
+                    () => setState(() {
+                          screenType = 0;
+                        })),
                 _buildCommonButton(
                     Text(
                       "中文",
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
-                    _square),
+                    () => setState(() {
+                          langType = 0;
+                        })),
                 _buildCommonButton(
                     Text(
                       "英文",
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
-                    _square),
+                    () => setState(() {
+                          langType = 1;
+                        })),
               ],
             ),
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 16.0),
+            margin: EdgeInsets.only(bottom: 8.0),
             child: Row(
               children: <Widget>[
                 _buildCommonButton(
@@ -178,7 +207,7 @@ class _FridayPageState extends State<FridayPage> {
                           color: FridayColors.jikeWhite, fontSize: 14.0),
                     ),
                     40.0,
-                    _square),
+                    () => {_capturePng(1)}),
                 _buildCommonButton(
                     Text(
                       "分享到",
@@ -188,12 +217,12 @@ class _FridayPageState extends State<FridayPage> {
                       ),
                     ),
                     40.0,
-                    _square),
+                    () => {_capturePng(2)}),
               ],
             ),
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 16.0),
+            margin: EdgeInsets.only(bottom: 8.0),
             child: Row(
               children: <Widget>[
                 _buildCommonButton(
@@ -203,7 +232,7 @@ class _FridayPageState extends State<FridayPage> {
                           color: FridayColors.jikeWhite, fontSize: 14.0),
                     ),
                     40.0,
-                    _square),
+                    _toJike),
                 _buildCommonButton(
                     Text(
                       "保存图片",
@@ -213,7 +242,7 @@ class _FridayPageState extends State<FridayPage> {
                       ),
                     ),
                     40.0,
-                    _square),
+                    () => {_capturePng(0)}),
               ],
             ),
           )
@@ -222,8 +251,71 @@ class _FridayPageState extends State<FridayPage> {
     );
   }
 
-  _square() {
-    print("click");
+  Future<File> _getLocalFile() async {
+    // 获取应用目录
+    Directory dir =
+        new Directory((await getExternalStorageDirectory()).path + "/Friday");
+    print(dir);
+    if (!await dir.exists()) {
+      dir.createSync();
+    }
+    return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
+  }
+
+  Future<File> _getCacheFile() async {
+    // 获取应用目录
+    Directory dir =
+        new Directory((await getTemporaryDirectory()).path + "/Friday");
+    print(dir);
+    if (!await dir.exists()) {
+      dir.createSync();
+    }
+    return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
+  }
+
+  static const platform =
+      const MethodChannel('info.zhufree.friday_today/wallpaper');
+
+  Future<bool> _capturePng(int type) async {
+    RenderRepaintBoundary boundary =
+        screenKey.currentContext.findRenderObject();
+    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytes = byteData.buffer.asUint8List();
+    try {
+      File file = await (type == 0 ? _getLocalFile() : _getCacheFile());
+      print(file.path);
+      await file.writeAsBytes(pngBytes);
+      if (type == 1) {
+        await platform.invokeMethod('setWallpaper', file.path);
+      } else if (type == 2) {
+        await Share.file(
+            'Friday', 'friday.png', pngBytes, 'image/png');
+      }
+      (scaffoldKey.currentState as ScaffoldState).showSnackBar(new SnackBar(
+        content: new Text("Ojbk!"),
+      ));
+      return true;
+    } catch (e) {
+      (scaffoldKey.currentState as ScaffoldState).showSnackBar(new SnackBar(
+        content: new Text("保存失败，${e.toString()}"),
+      ));
+      print(e.toString());
+      return false;
+    }
+  }
+
+
+  static const jikeUrl = "jike://page.jk/topic/565ac9dd4b715411006b5ecd";
+  static const downJikeLink =
+      "http://a.app.qq.com/o/simple.jsp?pkgname=com.ruguoapp.jike&ckey=CK1411402428437";
+
+  _toJike() async {
+    if (await canLaunch(jikeUrl)) {
+      await launch(jikeUrl);
+    } else {
+      await launch(downJikeLink);
+    }
   }
 
   _buildCommonButton(Widget text, double maxHeight, var onClick) {
@@ -254,7 +346,11 @@ class _FridayPageState extends State<FridayPage> {
       fontRows.add(_buildFontChangeDot(-1));
       fontRows.add(_buildFontChangeDot(-2));
       fontRows.add(_buildFontChangeDot(-3));
-    } else {}
+    } else {
+      for (var i = 1; i < 12; i++) {
+        fontRows.add(_buildFontChangeDot(i));
+      }
+    }
     return fontRows;
   }
 
@@ -521,8 +617,22 @@ const int shuType = 0;
 const int fangType = -1;
 const int kaiType = -2;
 const int heiType = -3;
+const int AmaticSC = 1;
+const int Courgette = 2;
+const int IndieFlower = 3;
+const int Kalam = 4;
+const int Laila = 5;
+const int Molle = 6;
+const int NovaFlat = 7;
+const int PermanentMarker = 8;
+const int PlayfairDisplay = 9;
+const int Teko = 10;
+const int YanoneKaffeesatz = 11;
 
 String getFontTitleByType(type) {
+  if (type > 0) {
+    return type.toString();
+  }
   switch (type) {
     case shuType:
       return "书";
@@ -547,6 +657,28 @@ String getFontNameByType(type) {
       return "kaiTi";
     case heiType:
       return "heiTi";
+    case AmaticSC:
+      return "AmaticSC";
+    case Courgette:
+      return "Courgette";
+    case IndieFlower:
+      return "IndieFlower";
+    case Kalam:
+      return "Kalam";
+    case Laila:
+      return "Laila";
+    case Molle:
+      return "Molle";
+    case NovaFlat:
+      return "NovaFlat";
+    case PermanentMarker:
+      return "PermanentMarker";
+    case PlayfairDisplay:
+      return "PlayfairDisplay";
+    case Teko:
+      return "Teko";
+    case YanoneKaffeesatz:
+      return "YanoneKaffeesatz";
     default:
       return "kaiTi";
   }

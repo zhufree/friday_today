@@ -1,0 +1,237 @@
+{
+  "@@last_modified": "2019-04-06T15:29:05.489601",
+  "appName": "Is Today Friday?",
+  "@appName": {
+    "description": "Title for the Friday application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "copyright": "Copyright",
+  "@copyright": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "appIdea": "The app come from an app named Jike APP in China,whichhas a group [Is today Friday?](You can visit it from the button at bottom-left.)",
+  "@appIdea": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "logoIdea": "The logo of this app come from a text style of Jike APP, and the picture is generated from a website created by a Jiker.",
+  "@logoIdea": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleColors": "Color",
+  "@titleColors": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mainColorInfo": "Main color: white(#F8F8F8)/blue(#01A9F4)/yellow(#FFE411)/black(#404040) was get from Jike website.",
+  "@mainColorInfo": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "moreColorInfo": "526 kinds of color in [more color] were got from awebsite named [中国色](The colors of China),you can visit it below.The color values at this website comes from a paper：《色谱》中科院科技情报编委会名词室.科学出版社,1957.",
+  "@moreColorInfo": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleFonts": "Fonts",
+  "@titleFonts": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chineseFontsInfo": "Chinese fonts：ShuSong、FangSong、KaiTi、HeiTi，are free fonts by FangZheng font library.",
+  "@chineseFontsInfo": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "englishFontsInfo": "English fonts: AmaticSC/Courgette/IndieFlower/Kalam/Laila/Molle/NovaFlat/PermanentMarker/PlayfairDisplay/Teko/YanoneKaffeesatz(by order), are all free fonts by google fonts website.",
+  "@englishFontsInfo": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "textColor": "Text Color",
+  "@textColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bgColor": "Bg Color",
+  "@bgColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bubbleColor": "Bubble Color",
+  "@bubbleColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "square": "Square",
+  "@square": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "full": "Full",
+  "@full": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleCn": "CN",
+  "@titleCn": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleEn": "EN",
+  "@titleEn": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "wallpaper": "Set As Wallpaper",
+  "@wallpaper": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleShare": "Share To",
+  "@titleShare": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "group": "Group Friday",
+  "@group": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleSave": "Save Picture",
+  "@titleSave": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "title": "Is today Friday?",
+  "@title": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleYes": "YES!",
+  "@titleYes": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleNo": "NO",
+  "@titleNo": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "moreColor": "More Color",
+  "@moreColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "customColor": "Custom Color",
+  "@customColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleBubble": "Bubble",
+  "@titleBubble": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleBg": "Background",
+  "@titleBg": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleText": "Text",
+  "@titleText": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleMoreColor": "More {title} Color",
+  "@titleMoreColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "titleCustomColor": "Custom {title} Color",
+  "@titleCustomColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "hintInputColor": "Enter a six-bit or eight-bit color value start with #",
+  "@hintInputColor": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noticeWrongInput": "Please enter valid color value.",
+  "@noticeWrongInput": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noticeDonation": "Go to target app, you can select qrcode in album to donate.",
+  "@noticeDonation": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noticeDonationError": "You don't have {appName} installed on your phone so you can't donate, thanks for your support.",
+  "@noticeDonationError": {
+    "description": "",
+    "type": "text",
+    "placeholders": {
+      "appName": {}
+    }
+  },
+  "titleWechat": "Donate By Wechat",
+  "@titleWechat": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleAlipay": "Donate By Alipay",
+  "@titleAlipay": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleDonation": "Long click qrcode to save in album.",
+  "@titleDonation": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  }
+}
