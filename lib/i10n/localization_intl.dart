@@ -215,7 +215,7 @@ class FridayLocalizations {
 
   String get moreColor {
     return Intl.message(
-      'More Color',
+      'More',
       name: 'moreColor',
       desc: '',
     );
@@ -223,7 +223,7 @@ class FridayLocalizations {
 
   String get customColor {
     return Intl.message(
-      'Custom Color',
+      'Custom',
       name: 'customColor',
       desc: '',
     );
@@ -324,9 +324,9 @@ class FridayLocalizations {
 }
 
 //Locale代理类
-class DemoLocalizationsDelegate
+class FridayLocalizationsDelegate
     extends LocalizationsDelegate<FridayLocalizations> {
-  const DemoLocalizationsDelegate();
+  const FridayLocalizationsDelegate();
 
   //是否支持某个Local
   @override
@@ -341,5 +341,5 @@ class DemoLocalizationsDelegate
 
   // 当Localizations Widget重新build时，是否调用load重新加载Locale资源.
   @override
-  bool shouldReload(DemoLocalizationsDelegate old) => false;
+  bool shouldReload(FridayLocalizationsDelegate old) => false;
 }

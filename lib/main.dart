@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'i10n/localization_intl.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(FridayApp());
 
@@ -17,11 +18,23 @@ class FridayApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: Strings.appName,
+      locale: Locale("zh", 'CN'),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: FridayPage(),
+      localizationsDelegates: [
+        // 本地化的代理类
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        // 注册我们的Delegate
+        FridayLocalizationsDelegate()
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'), // 美国英语
+        const Locale('zh', 'CN'), // 中文简体
+        //其它Locales
+      ],
     );
   }
 }
@@ -34,7 +47,7 @@ class FridayPage extends StatefulWidget {
 }
 
 class _FridayPageState extends State<FridayPage> {
-  int langType = 0;
+  int langType = 0; // 0 中文 1 英文
   int fontType = 0;
   String fontName = "kaiTi";
   Color bgColor = Colors.yellow;
@@ -57,7 +70,6 @@ class _FridayPageState extends State<FridayPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         key: scaffoldKey,
         body: Stack(
@@ -108,14 +120,16 @@ class _FridayPageState extends State<FridayPage> {
             child: Center(
               widthFactor: 1.3,
               child: Text(
-                Strings.appName,
+                langType == 0 ? "今天是周五吗？" : "Is today Friday?",
                 style: TextStyle(
                     fontSize: 25, color: textColor, fontFamily: fontName),
               ),
             ),
           ),
           Text(
-            '是',
+            today.weekday == 5
+                ? langType == 1 ? "YES!" : "是"
+                : langType == 1 ? "NO" : "不是",
             style:
                 TextStyle(fontSize: 90, color: textColor, fontFamily: fontName),
           ),
@@ -159,7 +173,7 @@ class _FridayPageState extends State<FridayPage> {
               children: <Widget>[
                 _buildCommonButton(
                     Text(
-                      "正方形",
+                      FridayLocalizations.of(context).square,
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
@@ -168,7 +182,7 @@ class _FridayPageState extends State<FridayPage> {
                         })),
                 _buildCommonButton(
                     Text(
-                      "全屏幕",
+                      FridayLocalizations.of(context).full,
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
@@ -177,7 +191,7 @@ class _FridayPageState extends State<FridayPage> {
                         })),
                 _buildCommonButton(
                     Text(
-                      "中文",
+                      FridayLocalizations.of(context).titleCn,
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
@@ -186,7 +200,7 @@ class _FridayPageState extends State<FridayPage> {
                         })),
                 _buildCommonButton(
                     Text(
-                      "英文",
+                      FridayLocalizations.of(context).titleEn,
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
@@ -202,7 +216,7 @@ class _FridayPageState extends State<FridayPage> {
               children: <Widget>[
                 _buildCommonButton(
                     Text(
-                      "设为壁纸",
+                      FridayLocalizations.of(context).wallpaper,
                       style: TextStyle(
                           color: FridayColors.jikeWhite, fontSize: 14.0),
                     ),
@@ -210,7 +224,7 @@ class _FridayPageState extends State<FridayPage> {
                     () => {_capturePng(1)}),
                 _buildCommonButton(
                     Text(
-                      "分享到",
+                      FridayLocalizations.of(context).titleShare,
                       style: TextStyle(
                         color: FridayColors.jikeWhite,
                         fontSize: 14.0,
@@ -227,7 +241,7 @@ class _FridayPageState extends State<FridayPage> {
               children: <Widget>[
                 _buildCommonButton(
                     Text(
-                      "周五圈子",
+                      FridayLocalizations.of(context).group,
                       style: TextStyle(
                           color: FridayColors.jikeWhite, fontSize: 14.0),
                     ),
@@ -235,7 +249,7 @@ class _FridayPageState extends State<FridayPage> {
                     _toJike),
                 _buildCommonButton(
                     Text(
-                      "保存图片",
+                      FridayLocalizations.of(context).titleSave,
                       style: TextStyle(
                         color: FridayColors.jikeWhite,
                         fontSize: 14.0,
@@ -289,8 +303,7 @@ class _FridayPageState extends State<FridayPage> {
       if (type == 1) {
         await platform.invokeMethod('setWallpaper', file.path);
       } else if (type == 2) {
-        await Share.file(
-            'Friday', 'friday.png', pngBytes, 'image/png');
+        await Share.file('Friday', 'friday.png', pngBytes, 'image/png');
       }
       (scaffoldKey.currentState as ScaffoldState).showSnackBar(new SnackBar(
         content: new Text("Ojbk!"),
@@ -304,7 +317,6 @@ class _FridayPageState extends State<FridayPage> {
       return false;
     }
   }
-
 
   static const jikeUrl = "jike://page.jk/topic/565ac9dd4b715411006b5ecd";
   static const downJikeLink =
@@ -391,7 +403,7 @@ class _FridayPageState extends State<FridayPage> {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Text(
-            "${getTitleByType(type)}颜色",
+            getTitleByType(type, context),
             style: TextStyle(
               fontSize: 12.0,
             ),
@@ -400,33 +412,37 @@ class _FridayPageState extends State<FridayPage> {
           _buildColorClickDot(type, FridayColors.jikeYellow),
           _buildColorClickDot(type, FridayColors.jikeBlue),
           _buildColorClickDot(type, FridayColors.jikeBlack),
-          Container(
-            height: 30.0,
-            padding: EdgeInsets.all(2.0),
-            margin: EdgeInsets.only(left: 8.0),
-            child: RaisedButton(
-              child: Text(
-                "更多颜色",
-                style: TextStyle(fontSize: 12.0, color: Colors.white),
+          Expanded(
+            child: Container(
+              height: 30.0,
+              padding: EdgeInsets.all(2.0),
+              margin: EdgeInsets.only(left: 8.0),
+              child: RaisedButton(
+                child: Text(
+                  FridayLocalizations.of(context).moreColor,
+                  style: TextStyle(fontSize: 12.0, color: Colors.white),
+                ),
+                onPressed: () => {_showPickColorDialog(type)},
+                color: Colors.black26,
+                shape: StadiumBorder(),
               ),
-              onPressed: () => {_showPickColorDialog(type)},
-              color: Colors.black26,
-              shape: StadiumBorder(),
             ),
           ),
-          Container(
-            height: 30.0,
-            width: 70.0,
-            padding: EdgeInsets.all(2.0),
-            margin: EdgeInsets.only(left: 8.0),
-            child: RaisedButton(
-              child: Text(
-                "自定义",
-                style: TextStyle(fontSize: 12.0, color: Colors.white),
+          Expanded(
+            child: Container(
+              height: 30.0,
+              padding: EdgeInsets.all(2.0),
+              margin: EdgeInsets.only(left: 8.0),
+              child: RaisedButton(
+                padding: EdgeInsets.all(0.0),
+                child: Text(
+                  FridayLocalizations.of(context).customColor,
+                  style: TextStyle(fontSize: 12.0, color: Colors.white),
+                ),
+                onPressed: () => {_showCustomColorDialog(type)},
+                color: Colors.black26,
+                shape: StadiumBorder(),
               ),
-              onPressed: () => {_showCustomColorDialog(type)},
-              color: Colors.black26,
-              shape: StadiumBorder(),
             ),
           ),
         ],
@@ -484,7 +500,7 @@ class _FridayPageState extends State<FridayPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16.0),
-          title: Text('${getTitleByType(type)}颜色'),
+          title: Text(getMoreColorTitleByType(type, context)),
           content: SingleChildScrollView(
             child: Center(
               child: Wrap(
@@ -534,9 +550,14 @@ class _FridayPageState extends State<FridayPage> {
 
   void _handleSubmitted(int type, String text) {
     _inputController.clear();
-    print(int.parse("0x$text"));
-    _changeColor(
-        type, Color(int.parse(text.length == 8 ? "0x$text" : "0xFF$text")));
+    if (text.length != 8 && text.length != 6) {
+      (scaffoldKey.currentState as ScaffoldState).showSnackBar(new SnackBar(
+        content: new Text(FridayLocalizations.of(context).noticeWrongInput),
+      ));
+    } else {
+      _changeColor(
+          type, Color(int.parse(text.length == 8 ? "0x$text" : "0xFF$text")));
+    }
   }
 
   /// 显示自定义颜色的dialog
@@ -547,11 +568,11 @@ class _FridayPageState extends State<FridayPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16.0),
-          title: Text('自定义${getTitleByType(type)}颜色'),
+          title: Text(getCustomColorTitleByType(type, context)),
           content: TextField(
             controller: _inputController,
             decoration: InputDecoration(
-                hintText: "输入不带#号的六位或八位颜色值",
+                hintText: FridayLocalizations.of(context).hintInputColor,
                 hintStyle: TextStyle(fontSize: 12.0)),
           ),
           actions: <Widget>[
@@ -600,17 +621,54 @@ const int bgType = 0;
 const int bubbleType = 1;
 const int textType = 2;
 
-String getTitleByType(type) {
+// xx颜色，更多xx颜色，自定义xx颜色
+String getTitleByType(type, context) {
   switch (type) {
     case bgType:
-      return "背景";
+      return FridayLocalizations.of(context).bgColor;
     case bubbleType:
-      return "气泡";
+      return FridayLocalizations.of(context).bubbleColor;
     case textType:
-      return "文字";
+      return FridayLocalizations.of(context).textColor;
     default:
-      return "背景";
+      return FridayLocalizations.of(context).bgColor;
   }
+}
+
+String getMoreColorTitleByType(type, context) {
+  var title;
+  switch (type) {
+    case bgType:
+      title = FridayLocalizations.of(context).titleBg;
+      break;
+    case bubbleType:
+      title = FridayLocalizations.of(context).titleBubble;
+      break;
+    case textType:
+      title = FridayLocalizations.of(context).titleText;
+      break;
+    default:
+      title = FridayLocalizations.of(context).titleBg;
+  }
+  return FridayLocalizations.of(context).titleMoreColor(title);
+}
+
+String getCustomColorTitleByType(type, context) {
+  var title;
+  switch (type) {
+    case bgType:
+      title = FridayLocalizations.of(context).titleBg;
+      break;
+    case bubbleType:
+      title = FridayLocalizations.of(context).titleBubble;
+      break;
+    case textType:
+      title = FridayLocalizations.of(context).titleText;
+      break;
+    default:
+      title = FridayLocalizations.of(context).titleBg;
+  }
+  return FridayLocalizations.of(context).titleCustomColor(title);
 }
 
 const int shuType = 0;
