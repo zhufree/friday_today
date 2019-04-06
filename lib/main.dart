@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'i10n/localization_intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(FridayApp());
 
@@ -24,16 +25,14 @@ class FridayApp extends StatelessWidget {
       ),
       home: FridayPage(),
       localizationsDelegates: [
-        // 本地化的代理类
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        // 注册我们的Delegate
         FridayLocalizationsDelegate()
       ],
       supportedLocales: [
+        // 支持的语言
         const Locale('en', 'US'), // 美国英语
         const Locale('zh', 'CN'), // 中文简体
-        //其它Locales
       ],
     );
   }
@@ -48,11 +47,10 @@ class FridayPage extends StatefulWidget {
 
 class _FridayPageState extends State<FridayPage> {
   int langType = 0; // 0 中文 1 英文
-  int fontType = 0;
   String fontName = "kaiTi";
-  Color bgColor = Colors.yellow;
-  Color bubbleColor = Colors.white;
-  Color textColor = Colors.black54;
+  Color bgColor;
+  Color bubbleColor;
+  Color textColor;
   DateTime today = DateTime.now();
 
   int screenType = 0;
@@ -63,9 +61,42 @@ class _FridayPageState extends State<FridayPage> {
   @override
   void initState() {
     super.initState();
-    bgColor = Color(0xFFFFE411);
-    bubbleColor = Color(0xFFFFFFFF);
-    textColor = Color(0xFF000000);
+    getInt(BG_COLOR).then((color) {
+      print(color);
+      setState(() {
+        bgColor = null == color ? FridayColors.jikeYellow : Color(color);
+      });
+    });
+    getInt(BUBBLE_COLOR).then((color) {
+      print(color);
+      setState(() {
+        bubbleColor = null == color ? FridayColors.jikeWhite : Color(color);
+      });
+    });
+    getInt(TEXT_COLOR).then((color) {
+      print(color);
+      setState(() {
+        textColor = null == color ? FridayColors.jikeBlack : Color(color);
+      });
+    });
+    getInt(LANG).then((lang) {
+      setState(() {
+        langType = null == lang ? 0 : lang;
+      });
+    });
+    if (langType == 0) {
+      getString(CN_FONT_NAME).then((name) {
+        setState(() {
+          fontName = null == name ? 'kaiTi' : name;
+        });
+      });
+    } else {
+      getString(CN_FONT_NAME).then((name) {
+        setState(() {
+          fontName = null == name ? 'AmaticSC' : name;
+        });
+      });
+    }
   }
 
   @override
@@ -104,7 +135,6 @@ class _FridayPageState extends State<FridayPage> {
 
   /// 绘制中间显示的部分
   _buildShowContent() {
-    print(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -195,18 +225,14 @@ class _FridayPageState extends State<FridayPage> {
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
-                    () => setState(() {
-                          langType = 0;
-                        })),
+                    () => {_changeLangType(0)}),
                 _buildCommonButton(
                     Text(
                       FridayLocalizations.of(context).titleEn,
                       style: TextStyle(color: FridayColors.jikeWhite),
                     ),
                     25.0,
-                    () => setState(() {
-                          langType = 1;
-                        })),
+                    () => {_changeLangType(1)}),
               ],
             ),
           ),
@@ -269,7 +295,6 @@ class _FridayPageState extends State<FridayPage> {
     // 获取应用目录
     Directory dir =
         new Directory((await getExternalStorageDirectory()).path + "/Friday");
-    print(dir);
     if (!await dir.exists()) {
       dir.createSync();
     }
@@ -280,7 +305,6 @@ class _FridayPageState extends State<FridayPage> {
     // 获取应用目录
     Directory dir =
         new Directory((await getTemporaryDirectory()).path + "/Friday");
-    print(dir);
     if (!await dir.exists()) {
       dir.createSync();
     }
@@ -298,7 +322,6 @@ class _FridayPageState extends State<FridayPage> {
     Uint8List pngBytes = byteData.buffer.asUint8List();
     try {
       File file = await (type == 0 ? _getLocalFile() : _getCacheFile());
-      print(file.path);
       await file.writeAsBytes(pngBytes);
       if (type == 1) {
         await platform.invokeMethod('setWallpaper', file.path);
@@ -471,25 +494,43 @@ class _FridayPageState extends State<FridayPage> {
     );
   }
 
+  static const BUBBLE_COLOR = "bubble_color";
+  static const BG_COLOR = "bg_color";
+  static const TEXT_COLOR = "text_color";
+  static const LANG = "language";
+  static const CN_FONT_NAME = "cn_font_type";
+  static const EN_FONT_NAME = "en_font_type";
+  static const COLOR_NAME = "color_name";
+
   /// 改变颜色的方法
   _changeColor(int type, Color color) {
     switch (type) {
       case bgType:
+        saveInt(BG_COLOR, color.value);
         setState(() {
           bgColor = color;
         });
         break;
       case bubbleType:
+        saveInt(BUBBLE_COLOR, color.value);
         setState(() {
           bubbleColor = color;
         });
         break;
       case textType:
+        saveInt(TEXT_COLOR, color.value);
         setState(() {
           textColor = color;
         });
         break;
     }
+  }
+
+  _changeLangType(type) {
+    saveInt(LANG, type);
+    setState(() {
+      langType = type;
+    });
   }
 
   /// 显示更多颜色的dialog
@@ -592,6 +633,11 @@ class _FridayPageState extends State<FridayPage> {
   _changeFontType(int fontType) {
     setState(() {
       fontName = getFontNameByType(fontType);
+      if (fontType > 0) {
+        saveString(EN_FONT_NAME, fontName);
+      } else {
+        saveString(CN_FONT_NAME, fontName);
+      }
     });
   }
 }
@@ -740,4 +786,24 @@ String getFontNameByType(type) {
     default:
       return "kaiTi";
   }
+}
+
+void saveString(key, value) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString(key, value);
+}
+
+void saveInt(key, value) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setInt(key, value);
+}
+
+Future<String> getString(key) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key);
+}
+
+Future<int> getInt(key) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt(key);
 }
