@@ -144,13 +144,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "moreColor": "更多颜色",
+  "moreColor": "更多",
   "@moreColor": {
     "description": "",
     "type": "text",
     "placeholders": {}
   },
-  "customColor": "自定义颜色",
+  "customColor": "自定义",
   "@customColor": {
     "description": "",
     "type": "text",

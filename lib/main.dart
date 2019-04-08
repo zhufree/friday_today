@@ -106,10 +106,13 @@ class _FridayPageState extends State<FridayPage> {
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: <Widget>[
+            // 展示部分需要整体居中
             Center(
+              // 套的这层RepaintBoundary是用来截屏的
               child: RepaintBoundary(
                 key: screenKey,
                 child: screenType == 1
+                    // 宽高一比一的情况
                     ? AspectRatio(
                         aspectRatio: 1 / 1,
                         child: Container(
@@ -117,63 +120,58 @@ class _FridayPageState extends State<FridayPage> {
                           child: _buildShowContent(),
                         ),
                       )
+                    // 占全屏幕的情况
                     : Container(
                         color: bgColor,
+                        constraints: BoxConstraints.expand(),
                         child: _buildShowContent(),
                       ),
               ),
             ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: _buildControlPanel(),
-            )
+            _buildControlPanel(),
           ],
         ));
   }
 
   /// 绘制中间显示的部分
   _buildShowContent() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(bottom: 20.0),
+    return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(bottom: 20.0),
 //              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            height: 60.0,
-            decoration: BoxDecoration(
-              color: bubbleColor,
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: Center(
-              widthFactor: 1.3,
-              child: Text(
-                langType == 0 ? "今天是周五吗？" : "Is today Friday?",
-                style: TextStyle(
-                    fontSize: 25, color: textColor, fontFamily: fontName),
+              height: 60.0,
+              decoration: BoxDecoration(
+                color: bubbleColor,
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: Center(
+                widthFactor: 1.3,
+                child: Text(
+                  langType == 0 ? "今天是周五吗？" : "Is today Friday?",
+                  style: TextStyle(
+                      fontSize: 25, color: textColor, fontFamily: fontName),
+                ),
               ),
             ),
-          ),
-          Text(
-            today.weekday == 5
-                ? langType == 1 ? "YES!" : "是"
-                : langType == 1 ? "NO" : "不是",
-            style:
-                TextStyle(fontSize: 90, color: textColor, fontFamily: fontName),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 20.0),
-            child: Text(
-              "${weekdayToString(today.weekday)} ${today.year}.${today.month}.${today.day}",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: textColor, fontFamily: fontName),
+            Text(
+              today.weekday == 5
+                  ? langType == 1 ? "YES!" : "是"
+                  : langType == 1 ? "NO" : "不是",
+              style:
+                  TextStyle(fontSize: 90, color: textColor, fontFamily: fontName),
             ),
-          ),
-        ],
-      ),
-    );
+            Container(
+              margin: EdgeInsets.only(top: 20.0),
+              child: Text(
+                "${weekdayToString(today.weekday)} ${today.year}.${today.month}.${today.day}",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: textColor, fontFamily: fontName),
+              ),
+            ),
+          ],
+        );
   }
 
   /// 绘制整个控制面板
@@ -183,6 +181,7 @@ class _FridayPageState extends State<FridayPage> {
       color: Color.fromARGB(30, 0, 0, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _buildColorController(0),
           _buildColorController(1),
