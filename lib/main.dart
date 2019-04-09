@@ -56,7 +56,7 @@ class _FridayPageState extends State<FridayPage> {
   int screenType = 0;
 
   GlobalKey screenKey = GlobalKey();
-  GlobalKey scaffoldKey = GlobalKey();
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   void initState() {
@@ -333,12 +333,12 @@ class _FridayPageState extends State<FridayPage> {
       } else if (type == 2) {
         await Share.file('Friday', 'friday.png', pngBytes, 'image/png');
       }
-      (scaffoldKey.currentState as ScaffoldState).showSnackBar(new SnackBar(
+      scaffoldKey.currentState.showSnackBar(new SnackBar(
         content: new Text("Ojbk!"),
       ));
       return true;
     } catch (e) {
-      (scaffoldKey.currentState as ScaffoldState).showSnackBar(new SnackBar(
+      scaffoldKey.currentState.showSnackBar(new SnackBar(
         content: new Text("保存失败，${e.toString()}"),
       ));
       print(e.toString());
@@ -547,14 +547,11 @@ class _FridayPageState extends State<FridayPage> {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16.0),
           title: Text(getMoreColorTitleByType(type, context)),
-          content: SingleChildScrollView(// 可滑动
-            child: Center( // 设置居中避免两侧空白不对称
-              child: Wrap(
-                spacing: 5.0,
-                runSpacing: 5.0,
-                children: getColorRows(type),
-              ),
-            ),
+          content: GridView.count(
+            crossAxisCount: 8,
+            crossAxisSpacing: 5.0,
+            mainAxisSpacing: 5.0,
+            children: getColorRows(type),
           ),
           actions: <Widget>[ // 设置可点击的按钮组
             FlatButton(
@@ -595,12 +592,14 @@ class _FridayPageState extends State<FridayPage> {
   final TextEditingController _inputController = new TextEditingController();
 
   void _handleSubmitted(int type, String text) {
-    _inputController.clear();
+    _inputController.clear(); // 清除输入的文字
     if (text.length != 8 && text.length != 6) {
-      (scaffoldKey.currentState as ScaffoldState).showSnackBar(new SnackBar(
+      // 输入的格式不正确，弹出提示
+      scaffoldKey.currentState.showSnackBar(new SnackBar(
         content: new Text(FridayLocalizations.of(context).noticeWrongInput),
       ));
     } else {
+      // 设置颜色
       _changeColor(
           type, Color(int.parse(text.length == 8 ? "0x$text" : "0xFF$text")));
     }
@@ -616,7 +615,7 @@ class _FridayPageState extends State<FridayPage> {
           contentPadding: EdgeInsets.all(16.0),
           title: Text(getCustomColorTitleByType(type, context)),
           content: TextField(
-            controller: _inputController,
+            controller: _inputController, // 文本控制器
             decoration: InputDecoration(
                 hintText: FridayLocalizations.of(context).hintInputColor,
                 hintStyle: TextStyle(fontSize: 12.0)),
@@ -625,8 +624,8 @@ class _FridayPageState extends State<FridayPage> {
             FlatButton(
               child: Text('OK'),
               onPressed: () {
-                _handleSubmitted(type, _inputController.text);
-                Navigator.of(context).pop();
+                _handleSubmitted(type, _inputController.text); // 点击ok时提交
+                Navigator.of(context).pop(); // dialog隐藏
               },
             ),
           ],
