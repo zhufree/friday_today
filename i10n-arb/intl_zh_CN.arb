@@ -174,7 +174,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "titleMoreColor": "更多%1$s颜色",
+  "titleMoreColor": "更多{title}颜色",
   "@titleMoreColor": {
     "description": "",
     "type": "text",
@@ -182,7 +182,7 @@
       "title": {}
     }
   },
-  "titleCustomColor": "自定义%1$s颜色",
+  "titleCustomColor": "自定义{title}颜色",
   "@titleCustomColor": {
     "description": "",
     "type": "text",

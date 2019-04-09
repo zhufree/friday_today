@@ -136,18 +136,19 @@ class _FridayPageState extends State<FridayPage> {
   /// 绘制中间显示的部分
   _buildShowContent() {
     return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center, // 子布局在横轴上居中
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(bottom: 20.0),
 //              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
               height: 60.0,
+              // 不是按钮没有现成的半圆方法，设置固定高度再加圆角
               decoration: BoxDecoration(
-                color: bubbleColor,
+                color: bubbleColor, // 设置气泡（文字的背景）颜色
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              child: Center(
-                widthFactor: 1.3,
+              child: Center(// 使文字整体居中
+                widthFactor: 1.3, // 宽度是文字宽度的1.3倍
                 child: Text(
                   langType == 0 ? "今天是周五吗？" : "Is today Friday?",
                   style: TextStyle(
@@ -178,26 +179,30 @@ class _FridayPageState extends State<FridayPage> {
   _buildControlPanel() {
     return Container(
       padding: EdgeInsets.all(12.0),
-      color: Color.fromARGB(30, 0, 0, 0),
+      color: Color.fromARGB(30, 0, 0, 0), // 半透明的黑色背景
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start, // 子布局在横轴上左对齐
+        mainAxisSize: MainAxisSize.min, // 高度保持最小高度以固定在底部
         children: <Widget>[
+          // 前三行分别是背景，气泡和文字的颜色控制，用一个方法封装
           _buildColorController(0),
           _buildColorController(1),
           _buildColorController(2),
+          // 展示可选择的字体
           Container(
             height: 30.0,
             margin: EdgeInsets.only(bottom: 8.0),
+            // 中文字体只有4个但是英文有11个，需要滚动，所以使用ListView而不是Row
             child: new ListView(
               padding: EdgeInsets.all(0.0),
-              scrollDirection: Axis.horizontal,
-              children: _buildFontRow(langType),
+              scrollDirection: Axis.horizontal, // 设置横向滚动
+              children: _buildFontRow(langType), // 根据字体种类生成切换字体的按钮组
             ),
           ),
           Container(
             margin: EdgeInsets.only(bottom: 8.0),
             child: Row(
+              // 一行四个按钮，用通用的方法生成，点击事件也从外部传入
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 _buildCommonButton(
@@ -235,6 +240,7 @@ class _FridayPageState extends State<FridayPage> {
               ],
             ),
           ),
+          // 四个功能按钮是2X2，用两个row
           Container(
             margin: EdgeInsets.only(bottom: 8.0),
             child: Row(
@@ -421,32 +427,34 @@ class _FridayPageState extends State<FridayPage> {
     return Container(
       margin: EdgeInsets.only(bottom: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,  // 主轴上从左到右
+        mainAxisSize: MainAxisSize.max, // 宽度占满
         children: <Widget>[
           Text(
-            getTitleByType(type, context),
+            getTitleByType(type, context), // 标题由type获取
             style: TextStyle(
               fontSize: 12.0,
             ),
           ),
+          // 生成颜色按钮
           _buildColorClickDot(type, FridayColors.jikeWhite),
           _buildColorClickDot(type, FridayColors.jikeYellow),
           _buildColorClickDot(type, FridayColors.jikeBlue),
           _buildColorClickDot(type, FridayColors.jikeBlack),
+          // Expanded占满剩余宽度
           Expanded(
             child: Container(
               height: 30.0,
-              padding: EdgeInsets.all(2.0),
+              padding: EdgeInsets.all(2.0), // 这个padding用于挤压缩小按钮本身
               margin: EdgeInsets.only(left: 8.0),
-              child: RaisedButton(
+              child: RaisedButton(// 有凸起阴影效果的按钮
                 child: Text(
                   FridayLocalizations.of(context).moreColor,
                   style: TextStyle(fontSize: 12.0, color: Colors.white),
                 ),
                 onPressed: () => {_showPickColorDialog(type)},
                 color: Colors.black26,
-                shape: StadiumBorder(),
+                shape: StadiumBorder(), // 半圆形按钮
               ),
             ),
           ),
@@ -477,17 +485,15 @@ class _FridayPageState extends State<FridayPage> {
     return Container(
       margin: EdgeInsets.only(left: 8.0),
       child: Container(
+        // 限制按钮的宽度
         width: 20.0,
         height: 20.0,
         child: RaisedButton(
 //          onPressed: _changeColor(type, color), // 这样写颜色出不来
           onPressed: () => {_changeColor(type, color)},
           color: color,
-          shape: CircleBorder(
-              side: BorderSide(
-            color: Colors.transparent,
-            width: 0,
-          )),
+          // 设置为圆形按钮，如果不添加这个shape就是20*20的正方形
+          shape: StadiumBorder(),
         ),
       ),
     );
@@ -536,13 +542,13 @@ class _FridayPageState extends State<FridayPage> {
   Future<void> _showPickColorDialog(int type) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true, // 设置是否能通过点击空白处退出
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16.0),
           title: Text(getMoreColorTitleByType(type, context)),
-          content: SingleChildScrollView(
-            child: Center(
+          content: SingleChildScrollView(// 可滑动
+            child: Center( // 设置居中避免两侧空白不对称
               child: Wrap(
                 spacing: 5.0,
                 runSpacing: 5.0,
@@ -550,7 +556,7 @@ class _FridayPageState extends State<FridayPage> {
               ),
             ),
           ),
-          actions: <Widget>[
+          actions: <Widget>[ // 设置可点击的按钮组
             FlatButton(
               child: Text('OK'),
               onPressed: () {
@@ -604,7 +610,7 @@ class _FridayPageState extends State<FridayPage> {
   Future<void> _showCustomColorDialog(int type) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true, // 设置是否能通过点击空白处退出
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16.0),

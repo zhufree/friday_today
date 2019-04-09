@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-04-06T15:29:05.489601",
+  "@@last_modified": "2019-04-09T10:47:41.204933",
   "appName": "Is Today Friday?",
   "@appName": {
     "description": "Title for the Friday application",
@@ -144,13 +144,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "moreColor": "More Color",
+  "moreColor": "More",
   "@moreColor": {
     "description": "",
     "type": "text",
     "placeholders": {}
   },
-  "customColor": "Custom Color",
+  "customColor": "Custom",
   "@customColor": {
     "description": "",
     "type": "text",

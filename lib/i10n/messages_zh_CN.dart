@@ -20,9 +20,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(appName) => "支付宝捐赠";
 
-  static m1(title) => "自定义%1\$s颜色";
+  static m1(title) => "自定义$title颜色";
 
-  static m2(title) => "更多%1\$s颜色";
+  static m2(title) => "更多$title颜色";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
