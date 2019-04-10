@@ -47,13 +47,13 @@ class FridayPage extends StatefulWidget {
 
 class _FridayPageState extends State<FridayPage> {
   int langType = 0; // 0 中文 1 英文
-  String fontName = "kaiTi";
-  Color bgColor;
-  Color bubbleColor;
-  Color textColor;
-  DateTime today = DateTime.now();
+  String fontName = "kaiTi"; // 字体名
+  Color bgColor; // 背景颜色
+  Color bubbleColor; // 气泡颜色
+  Color textColor; // 文字颜色
+  int screenType = 0; // 全屏/ 正方形
 
-  int screenType = 0;
+  DateTime today = DateTime.now();
 
   GlobalKey screenKey = GlobalKey();
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
@@ -136,43 +136,44 @@ class _FridayPageState extends State<FridayPage> {
   /// 绘制中间显示的部分
   _buildShowContent() {
     return Column(
-          mainAxisAlignment: MainAxisAlignment.center, // 子布局在横轴上居中
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(bottom: 20.0),
+      mainAxisAlignment: MainAxisAlignment.center, // 子布局在横轴上居中
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(bottom: 20.0),
 //              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              height: 60.0,
-              // 不是按钮没有现成的半圆方法，设置固定高度再加圆角
-              decoration: BoxDecoration(
-                color: bubbleColor, // 设置气泡（文字的背景）颜色
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Center(// 使文字整体居中
-                widthFactor: 1.3, // 宽度是文字宽度的1.3倍
-                child: Text(
-                  langType == 0 ? "今天是周五吗？" : "Is today Friday?",
-                  style: TextStyle(
-                      fontSize: 25, color: textColor, fontFamily: fontName),
-                ),
-              ),
+          height: 60.0,
+          // 不是按钮没有现成的半圆方法，设置固定高度再加圆角
+          decoration: BoxDecoration(
+            color: bubbleColor, // 设置气泡（文字的背景）颜色
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Center(
+            // 使文字整体居中
+            widthFactor: 1.3, // 宽度是文字宽度的1.3倍
+            child: Text(
+              langType == 0 ? "今天是周五吗？" : "Is today Friday?",
+              style: TextStyle(
+                  fontSize: 25, color: textColor, fontFamily: fontName),
             ),
-            Text(
-              today.weekday == 5
-                  ? langType == 1 ? "YES!" : "是"
-                  : langType == 1 ? "NO" : "不是",
-              style:
-                  TextStyle(fontSize: 90, color: textColor, fontFamily: fontName),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 20.0),
-              child: Text(
-                "${weekdayToString(today.weekday)} ${today.year}.${today.month}.${today.day}",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: textColor, fontFamily: fontName),
-              ),
-            ),
-          ],
-        );
+          ),
+        ),
+        Text(
+          today.weekday == 5
+              ? langType == 1 ? "YES!" : "是"
+              : langType == 1 ? "NO" : "不是",
+          style:
+              TextStyle(fontSize: 90, color: textColor, fontFamily: fontName),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 20.0),
+          child: Text(
+            "${weekdayToString(today.weekday)} ${today.year}.${today.month}.${today.day}",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: textColor, fontFamily: fontName),
+          ),
+        ),
+      ],
+    );
   }
 
   /// 绘制整个控制面板
@@ -316,20 +317,20 @@ class _FridayPageState extends State<FridayPage> {
     return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
   }
 
-  static const platform =
-      const MethodChannel('info.zhufree.friday_today/wallpaper');
+  static const _channel = const MethodChannel('wallpaper');
 
   Future<bool> _capturePng(int type) async {
     RenderRepaintBoundary boundary =
-        screenKey.currentContext.findRenderObject();
-    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+        screenKey.currentContext.findRenderObject(); // 获取要截图的部分
+    ui.Image image = await boundary.toImage(pixelRatio: 3.0); // 用toImage转为图片
     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List pngBytes = byteData.buffer.asUint8List();
+    Uint8List pngBytes = byteData.buffer.asUint8List(); // 图片转成字节
     try {
       File file = await (type == 0 ? _getLocalFile() : _getCacheFile());
       await file.writeAsBytes(pngBytes);
       if (type == 1) {
-        await platform.invokeMethod('setWallpaper', file.path);
+        await _channel.invokeMethod(
+            'setWallpaper', file.path); // 调用setWallpaper方法，文件路径作为参数传递
       } else if (type == 2) {
         await Share.file('Friday', 'friday.png', pngBytes, 'image/png');
       }
@@ -427,7 +428,7 @@ class _FridayPageState extends State<FridayPage> {
     return Container(
       margin: EdgeInsets.only(bottom: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,  // 主轴上从左到右
+        mainAxisAlignment: MainAxisAlignment.start, // 主轴上从左到右
         mainAxisSize: MainAxisSize.max, // 宽度占满
         children: <Widget>[
           Text(
@@ -447,7 +448,8 @@ class _FridayPageState extends State<FridayPage> {
               height: 30.0,
               padding: EdgeInsets.all(2.0), // 这个padding用于挤压缩小按钮本身
               margin: EdgeInsets.only(left: 8.0),
-              child: RaisedButton(// 有凸起阴影效果的按钮
+              child: RaisedButton(
+                // 有凸起阴影效果的按钮
                 child: Text(
                   FridayLocalizations.of(context).moreColor,
                   style: TextStyle(fontSize: 12.0, color: Colors.white),
@@ -553,7 +555,8 @@ class _FridayPageState extends State<FridayPage> {
             mainAxisSpacing: 5.0,
             children: getColorRows(type),
           ),
-          actions: <Widget>[ // 设置可点击的按钮组
+          actions: <Widget>[
+            // 设置可点击的按钮组
             FlatButton(
               child: Text('OK'),
               onPressed: () {

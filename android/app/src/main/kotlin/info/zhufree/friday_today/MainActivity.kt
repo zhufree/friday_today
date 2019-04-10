@@ -4,13 +4,9 @@ import android.os.Bundle
 
 import io.flutter.app.FlutterActivity
 import io.flutter.plugins.GeneratedPluginRegistrant
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
 import android.annotation.TargetApi;
 import android.app.WallpaperManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import java.io.File;
@@ -18,30 +14,28 @@ import java.io.IOException;
 
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "info.zhufree.friday_today/wallpaper"
+    private val channel = "wallpaper"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
-        MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(
-                object : MethodCallHandler {
-                    override fun onMethodCall(methodCall: MethodCall, result: Result) {
-                        if (methodCall.method.equals("setWallpaper")) {
-                            val setWallpaperResult = setWallpaper(methodCall.arguments as String)
-                            //int setWallpaper = getBatteryLevel();
+        MethodChannel(flutterView, channel).setMethodCallHandler { methodCall, result ->
+            // 判断方法名
+            if (methodCall.method == "setWallpaper") {
+                // 设置壁纸的方法封装在setWallpaper中，methodCall.arguments as String拿到路径参数
+                val setWallpaperResult = setWallpaper(methodCall.arguments as String)
 
-                            if (setWallpaperResult == 0) {
-                                result.success(setWallpaperResult)
-                            } else {
-                                result.error("UNAVAILABLE", "", null)
-                            }
-                        }
-                    }
+                if (setWallpaperResult == 0) {
+                    // 成功的回调
+                    result.success(setWallpaperResult)
+                } else {
+                    // 失败的回调
+                    result.error("UNAVAILABLE", "", null)
                 }
-        )
+            }
+        }
     }
 
-    @TargetApi(Build.VERSION_CODES.ECLAIR)
     private fun setWallpaper(path: String): Int {
         var result = 1
         val imgFile = File(path)

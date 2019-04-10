@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-class Strings {
-  static String appName = "今天是周五吗?";
-}
-
 class FridayColors {
   static Color jikeWhite = Color(0xFFF8F8F8);
   static Color jikeYellow = Color(0xFFFFE411);
