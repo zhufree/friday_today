@@ -7,6 +7,10 @@ class FridayColors {
   static Color jikeBlack = Color(0xFF404040);
 
   static List<int> colorList = [
+    0xFFF8F8F8,
+    0xFFFFE411,
+    0xFF01A9F4,
+    0xFF404040,
     0xFFf9f4dc,
     0xFFf7e8aa,
     0xFFf8df72,
@@ -536,6 +540,10 @@ class FridayColors {
   ];
 
   static List<String> colorNameList = [
+    "即刻白",
+    "即刻黄",
+    "即刻蓝",
+    "即刻黑",
     "乳白",
     "杏仁黄",
     "茉莉黄",

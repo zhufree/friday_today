@@ -54,7 +54,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "englishFontsInfo": "fonts网站的免费字体",
+  "englishFontsInfo": "英文字体按顺序依次为：AmaticSC/Courgette/IndieFlower/Kalam/Laila/Molle/NovaFlat/PermanentMarker/PlayfairDisplay/Teko/YanoneKaffeesatz，均为google fonts网站的免费字体",
   "@englishFontsInfo": {
     "description": "",
     "type": "text",

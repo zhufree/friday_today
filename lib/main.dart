@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'constants.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
@@ -11,6 +10,10 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'i10n/localization_intl.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'constants.dart';
+import 'donation_page.dart';
+import 'copyright_page.dart';
 
 void main() => runApp(FridayApp());
 
@@ -51,6 +54,8 @@ class _FridayPageState extends State<FridayPage> {
   Color bgColor; // 背景颜色
   Color bubbleColor; // 气泡颜色
   Color textColor; // 文字颜色
+  String colorName = "即刻黄";
+  bool showControlPanel = true;
   int screenType = 0; // 全屏/ 正方形
 
   DateTime today = DateTime.now();
@@ -61,6 +66,7 @@ class _FridayPageState extends State<FridayPage> {
   @override
   void initState() {
     super.initState();
+    // 获取本地存储的之前设置的数据
     getInt(BG_COLOR).then((color) {
       print(color);
       setState(() {
@@ -77,6 +83,11 @@ class _FridayPageState extends State<FridayPage> {
       print(color);
       setState(() {
         textColor = null == color ? FridayColors.jikeBlack : Color(color);
+      });
+    });
+    getString(COLOR_NAME).then((name) {
+      setState(() {
+        colorName = null == name ? FridayColors.colorNameList[1] : name;
       });
     });
     getInt(LANG).then((lang) {
@@ -107,28 +118,60 @@ class _FridayPageState extends State<FridayPage> {
           alignment: Alignment.bottomCenter,
           children: <Widget>[
             // 展示部分需要整体居中
-            Center(
-              // 套的这层RepaintBoundary是用来截屏的
-              child: RepaintBoundary(
-                key: screenKey,
-                child: screenType == 1
-                    // 宽高一比一的情况
-                    ? AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: Container(
+            GestureDetector(
+              onTap: () => {
+                    setState(() {
+                      // 切换显示隐藏控制面板
+                      showControlPanel = !showControlPanel;
+                    })
+                  },
+              child: Center(
+                // 套的这层RepaintBoundary是用来截屏的
+                child: RepaintBoundary(
+                  key: screenKey,
+                  child: screenType == 1
+                      // 宽高一比一的情况
+                      ? AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Container(
+                            color: bgColor,
+                            child: _buildShowContent(),
+                          ),
+                        )
+                      // 占全屏幕的情况
+                      : Container(
                           color: bgColor,
+                          constraints: BoxConstraints.expand(),
                           child: _buildShowContent(),
                         ),
-                      )
-                    // 占全屏幕的情况
-                    : Container(
-                        color: bgColor,
-                        constraints: BoxConstraints.expand(),
-                        child: _buildShowContent(),
-                      ),
+                ),
               ),
             ),
-            _buildControlPanel(),
+            showControlPanel ? _buildControlPanel() : Container(),
+            Positioned(
+              top: 8.0,
+              left: 8.0,
+              child: IconButton(
+                  icon: Icon(Icons.copyright),
+                  onPressed: () => {
+                        Navigator.push(context,
+                            new MaterialPageRoute(builder: (context) {
+                          return new CopyRightPage();
+                        }))
+                      }),
+            ),
+            Positioned(
+              top: 8.0,
+              right: 8.0,
+              child:
+                  IconButton(icon: Icon(Icons.attach_money),
+                      onPressed: () => {
+                      Navigator.push(context,
+                          new MaterialPageRoute(builder: (context) {
+                            return new DonationPage();
+                          }))
+                      }),
+            ),
           ],
         ));
   }
@@ -172,6 +215,14 @@ class _FridayPageState extends State<FridayPage> {
             style: TextStyle(color: textColor, fontFamily: fontName),
           ),
         ),
+        Container(
+          margin: EdgeInsets.only(top: 10.0),
+          child: Text(
+            colorName,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: textColor),
+          ),
+        )
       ],
     );
   }
@@ -297,6 +348,7 @@ class _FridayPageState extends State<FridayPage> {
     );
   }
 
+  // TODO 使用封装的方法
   Future<File> _getLocalFile() async {
     // 获取应用目录
     Directory dir =
@@ -517,6 +569,7 @@ class _FridayPageState extends State<FridayPage> {
         setState(() {
           bgColor = color;
         });
+        _changeColorName(color.value);
         break;
       case bubbleType:
         saveInt(BUBBLE_COLOR, color.value);
@@ -531,6 +584,15 @@ class _FridayPageState extends State<FridayPage> {
         });
         break;
     }
+  }
+
+  _changeColorName(colorValue) {
+    int colorIndex = FridayColors.colorList.indexOf(colorValue);
+    var name = FridayColors.colorNameList[colorIndex];
+    saveString(COLOR_NAME, name);
+    setState(() {
+      colorName = name;
+    });
   }
 
   _changeLangType(type) {
