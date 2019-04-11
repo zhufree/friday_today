@@ -83,7 +83,6 @@ class _DonationPageState extends State<DonationPage> {
   }
 
   _saveImgFile() async {
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("saving")));
     File file = await getLocalFile(donationImgName.substring(7));
     DefaultAssetBundle.of(context)
         .load(donationImgName)
@@ -91,6 +90,6 @@ class _DonationPageState extends State<DonationPage> {
       Uint8List pngBytes = data.buffer.asUint8List();
       file.writeAsBytes(pngBytes);
     });
-    // TODO 跳转app
+    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("saving")));
   }
 }

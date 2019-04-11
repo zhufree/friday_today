@@ -202,13 +202,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "noticeDonation": "微信捐赠",
+  "noticeDonation": "正在跳转到微信或支付宝扫一扫，请从相册选取赞赏二维码随意打赏",
   "@noticeDonation": {
     "description": "",
     "type": "text",
     "placeholders": {}
   },
-  "noticeDonationError": "支付宝捐赠",
+  "noticeDonationError": "检测到未安装{appName}无法打赏，感谢支持",
   "@noticeDonationError": {
     "description": "",
     "type": "text",
@@ -216,13 +216,13 @@
       "appName": {}
     }
   },
-  "titleWechat": "正在跳转到微信或支付宝扫一扫，请从相册选取赞赏二维码随意打赏",
+  "titleWechat": "微信捐赠",
   "@titleWechat": {
     "description": "",
     "type": "text",
     "placeholders": {}
   },
-  "titleAlipay": "检测到未安装%1$s无法打赏，感谢支持",
+  "titleAlipay": "支付宝捐赠",
   "@titleAlipay": {
     "description": "",
     "type": "text",

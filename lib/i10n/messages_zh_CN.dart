@@ -18,11 +18,11 @@ typedef MessageIfAbsent(String message_str, List args);
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'zh_CN';
 
-  static m0(appName) => "支付宝捐赠";
+  static m0(appName) => "检测到未安装${appName}无法打赏，感谢支持";
 
-  static m1(title) => "自定义$title颜色";
+  static m1(title) => "自定义${title}颜色";
 
-  static m2(title) => "更多$title颜色";
+  static m2(title) => "更多${title}颜色";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -33,7 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chineseFontsInfo" : MessageLookupByLibrary.simpleMessage("中文字体：书宋、仿宋、楷体、黑体，来自方正字库的免费字体"),
     "copyright" : MessageLookupByLibrary.simpleMessage("版权声明"),
     "customColor" : MessageLookupByLibrary.simpleMessage("自定义"),
-    "englishFontsInfo" : MessageLookupByLibrary.simpleMessage("fonts网站的免费字体"),
+    "englishFontsInfo" : MessageLookupByLibrary.simpleMessage("英文字体按顺序依次为：AmaticSC/Courgette/IndieFlower/Kalam/Laila/Molle/NovaFlat/PermanentMarker/PlayfairDisplay/Teko/YanoneKaffeesatz，均为google fonts网站的免费字体"),
     "full" : MessageLookupByLibrary.simpleMessage("全屏幕"),
     "group" : MessageLookupByLibrary.simpleMessage("周五圈子"),
     "hintInputColor" : MessageLookupByLibrary.simpleMessage("输入六位或八位颜色值，以#开头"),
@@ -41,13 +41,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "mainColorInfo" : MessageLookupByLibrary.simpleMessage("主颜色白色（#F8F8F8）/蓝色（#01A9F4）/黄色（#FFE411）/黑色（#404040）取自即刻web端网站（颜色值不一定准确）"),
     "moreColor" : MessageLookupByLibrary.simpleMessage("更多"),
     "moreColorInfo" : MessageLookupByLibrary.simpleMessage("更多颜色中的526种颜色值取自中国色网站（网址见下），该网站的颜色值源自《色谱》中科院科技情报编委会名词室.科学出版社,1957."),
-    "noticeDonation" : MessageLookupByLibrary.simpleMessage("微信捐赠"),
+    "noticeDonation" : MessageLookupByLibrary.simpleMessage("正在跳转到微信或支付宝扫一扫，请从相册选取赞赏二维码随意打赏"),
     "noticeDonationError" : m0,
     "noticeWrongInput" : MessageLookupByLibrary.simpleMessage("请输入正确的颜色值"),
     "square" : MessageLookupByLibrary.simpleMessage("正方形"),
     "textColor" : MessageLookupByLibrary.simpleMessage("字体颜色"),
     "title" : MessageLookupByLibrary.simpleMessage("今天是周五吗？"),
-    "titleAlipay" : MessageLookupByLibrary.simpleMessage("检测到未安装%1\$s无法打赏，感谢支持"),
+    "titleAlipay" : MessageLookupByLibrary.simpleMessage("支付宝捐赠"),
     "titleBg" : MessageLookupByLibrary.simpleMessage("背景"),
     "titleBubble" : MessageLookupByLibrary.simpleMessage("气泡"),
     "titleCn" : MessageLookupByLibrary.simpleMessage("中"),
@@ -61,7 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "titleSave" : MessageLookupByLibrary.simpleMessage("保存图片"),
     "titleShare" : MessageLookupByLibrary.simpleMessage("分享到"),
     "titleText" : MessageLookupByLibrary.simpleMessage("文字"),
-    "titleWechat" : MessageLookupByLibrary.simpleMessage("正在跳转到微信或支付宝扫一扫，请从相册选取赞赏二维码随意打赏"),
+    "titleWechat" : MessageLookupByLibrary.simpleMessage("微信捐赠"),
     "titleYes" : MessageLookupByLibrary.simpleMessage("是"),
     "wallpaper" : MessageLookupByLibrary.simpleMessage("设为壁纸")
   };
