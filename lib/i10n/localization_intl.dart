@@ -283,10 +283,10 @@ class FridayLocalizations {
     );
   }
 
-  String get noticeDonation {
+  String get noticeSave {
     return Intl.message(
-      'Go to target app, you can select qrcode in album to donate.',
-      name: 'noticeDonation',
+      'The QRcode has been saved to album.',
+      name: 'noticeSave',
       desc: '',
     );
   }
@@ -314,13 +314,27 @@ class FridayLocalizations {
     );
   }
 
-  String get titleDonation {
+  String get noticeDonation {
     return Intl.message(
       'Long click qrcode to save in album.',
+      name: 'noticeDonation',
+      desc: '',
+    );
+  }
+
+  String get titleDonation {
+    return Intl.message(
+      'Donate developer.',
       name: 'titleDonation',
       desc: '',
     );
   }
+
+  String saveFailNotice(reason) => Intl.message(
+      'Save failed : $reason',
+      name: 'saveFailNotice',
+      desc: '',
+      args: [reason]);
 }
 
 //Locale代理类

@@ -202,8 +202,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "noticeDonation": "正在跳转到微信或支付宝扫一扫，请从相册选取赞赏二维码随意打赏",
-  "@noticeDonation": {
+  "noticeSave": "已成功保存二维码到相册",
+  "@noticeSave": {
     "description": "",
     "type": "text",
     "placeholders": {}
@@ -228,10 +228,24 @@
     "type": "text",
     "placeholders": {}
   },
-  "titleDonation": "长按二维码保存到相册",
+  "noticeDonation": "长按二维码保存到相册",
+  "@noticeDonation": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleDonation": "捐赠开发者",
   "@titleDonation": {
     "description": "",
     "type": "text",
     "placeholders": {}
+  },
+  "saveFailNotice": "保存失败: {reason}",
+  "@saveFailNotice": {
+    "description": "",
+    "type": "text",
+    "placeholders": {
+      "reason": {}
+    }
   }
 }

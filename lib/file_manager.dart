@@ -11,12 +11,12 @@ Future<File> getLocalFile(filename) async {
   return new File('${dir.absolute.path}/$filename');
 }
 
-Future<File> _getCacheFile() async {
+Future<File> getCacheFile(filename) async {
   // 获取应用目录
   Directory dir =
   new Directory((await getTemporaryDirectory()).path + "/Friday");
   if (!await dir.exists()) {
     dir.createSync();
   }
-  return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
+  return new File('${dir.absolute.path}/$filename');
 }

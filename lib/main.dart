@@ -12,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
+import 'file_manager.dart';
 import 'donation_page.dart';
 import 'copyright_page.dart';
 
@@ -348,26 +349,25 @@ class _FridayPageState extends State<FridayPage> {
     );
   }
 
-  // TODO 使用封装的方法
-  Future<File> _getLocalFile() async {
-    // 获取应用目录
-    Directory dir =
-        new Directory((await getExternalStorageDirectory()).path + "/Friday");
-    if (!await dir.exists()) {
-      dir.createSync();
-    }
-    return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
-  }
-
-  Future<File> _getCacheFile() async {
-    // 获取应用目录
-    Directory dir =
-        new Directory((await getTemporaryDirectory()).path + "/Friday");
-    if (!await dir.exists()) {
-      dir.createSync();
-    }
-    return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
-  }
+//  Future<File> _getLocalFile() async {
+//    // 获取应用目录
+//    Directory dir =
+//        new Directory((await getExternalStorageDirectory()).path + "/Friday");
+//    if (!await dir.exists()) {
+//      dir.createSync();
+//    }
+//    return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
+//  }
+//
+//  Future<File> _getCacheFile() async {
+//    // 获取应用目录
+//    Directory dir =
+//        new Directory((await getTemporaryDirectory()).path + "/Friday");
+//    if (!await dir.exists()) {
+//      dir.createSync();
+//    }
+//    return new File('${dir.absolute.path}/screenshot_${DateTime.now()}.png');
+//  }
 
   static const _channel = const MethodChannel('wallpaper');
 
@@ -378,7 +378,8 @@ class _FridayPageState extends State<FridayPage> {
     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     Uint8List pngBytes = byteData.buffer.asUint8List(); // 图片转成字节
     try {
-      File file = await (type == 0 ? _getLocalFile() : _getCacheFile());
+      File file = await (type == 0 ? getLocalFile('screenshot_${DateTime.now()}.png')
+          : getCacheFile('screenshot_${DateTime.now()}.png'));
       await file.writeAsBytes(pngBytes);
       if (type == 1) {
         await _channel.invokeMethod(
@@ -392,7 +393,7 @@ class _FridayPageState extends State<FridayPage> {
       return true;
     } catch (e) {
       scaffoldKey.currentState.showSnackBar(new SnackBar(
-        content: new Text("保存失败，${e.toString()}"),
+        content: new Text(FridayLocalizations.of(context).saveFailNotice(e.toString())),
       ));
       print(e.toString());
       return false;

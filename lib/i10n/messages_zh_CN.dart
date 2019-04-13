@@ -20,9 +20,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(appName) => "检测到未安装${appName}无法打赏，感谢支持";
 
-  static m1(title) => "自定义${title}颜色";
+  static m1(reason) => "保存失败: ${reason}";
 
-  static m2(title) => "更多${title}颜色";
+  static m2(title) => "自定义${title}颜色";
+
+  static m3(title) => "更多${title}颜色";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -41,9 +43,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "mainColorInfo" : MessageLookupByLibrary.simpleMessage("主颜色白色（#F8F8F8）/蓝色（#01A9F4）/黄色（#FFE411）/黑色（#404040）取自即刻web端网站（颜色值不一定准确）"),
     "moreColor" : MessageLookupByLibrary.simpleMessage("更多"),
     "moreColorInfo" : MessageLookupByLibrary.simpleMessage("更多颜色中的526种颜色值取自中国色网站（网址见下），该网站的颜色值源自《色谱》中科院科技情报编委会名词室.科学出版社,1957."),
-    "noticeDonation" : MessageLookupByLibrary.simpleMessage("正在跳转到微信或支付宝扫一扫，请从相册选取赞赏二维码随意打赏"),
+    "noticeDonation" : MessageLookupByLibrary.simpleMessage("长按二维码保存到相册"),
     "noticeDonationError" : m0,
+    "noticeSave" : MessageLookupByLibrary.simpleMessage("已成功保存二维码到相册"),
     "noticeWrongInput" : MessageLookupByLibrary.simpleMessage("请输入正确的颜色值"),
+    "saveFailNotice" : m1,
     "square" : MessageLookupByLibrary.simpleMessage("正方形"),
     "textColor" : MessageLookupByLibrary.simpleMessage("字体颜色"),
     "title" : MessageLookupByLibrary.simpleMessage("今天是周五吗？"),
@@ -52,11 +56,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "titleBubble" : MessageLookupByLibrary.simpleMessage("气泡"),
     "titleCn" : MessageLookupByLibrary.simpleMessage("中"),
     "titleColors" : MessageLookupByLibrary.simpleMessage("颜色"),
-    "titleCustomColor" : m1,
-    "titleDonation" : MessageLookupByLibrary.simpleMessage("长按二维码保存到相册"),
+    "titleCustomColor" : m2,
+    "titleDonation" : MessageLookupByLibrary.simpleMessage("捐赠开发者"),
     "titleEn" : MessageLookupByLibrary.simpleMessage("英"),
     "titleFonts" : MessageLookupByLibrary.simpleMessage("字体"),
-    "titleMoreColor" : m2,
+    "titleMoreColor" : m3,
     "titleNo" : MessageLookupByLibrary.simpleMessage("不是"),
     "titleSave" : MessageLookupByLibrary.simpleMessage("保存图片"),
     "titleShare" : MessageLookupByLibrary.simpleMessage("分享到"),

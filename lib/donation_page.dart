@@ -21,8 +21,7 @@ class _DonationPageState extends State<DonationPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        // TODO 字符串替换
-        title: Text("捐赠开发者"),
+        title: Text(FridayLocalizations.of(context).titleDonation),
       ),
       body: Container(
         child: Column(
@@ -32,7 +31,7 @@ class _DonationPageState extends State<DonationPage> {
           children: <Widget>[
             Container(
                 margin: EdgeInsets.symmetric(vertical: 16.0),
-                child: Text(FridayLocalizations.of(context).titleDonation)),
+                child: Text(FridayLocalizations.of(context).noticeDonation)),
             GestureDetector(
               onLongPress: () => {_saveImgFile()},
               child: Image.asset(
@@ -49,7 +48,7 @@ class _DonationPageState extends State<DonationPage> {
                     margin: EdgeInsets.only(right: 8.0),
                     child: RaisedButton(
                       child: Text(
-                        "微信二维码",
+                        FridayLocalizations.of(context).titleWechat,
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.green,
@@ -64,7 +63,7 @@ class _DonationPageState extends State<DonationPage> {
                   Container(
                     margin: EdgeInsets.only(left: 8.0),
                     child: RaisedButton(
-                      child: Text("支付宝二维码"),
+                      child: Text(FridayLocalizations.of(context).titleAlipay),
                       shape: StadiumBorder(),
                       onPressed: () => {
                             setState(() {
@@ -90,6 +89,8 @@ class _DonationPageState extends State<DonationPage> {
       Uint8List pngBytes = data.buffer.asUint8List();
       file.writeAsBytes(pngBytes);
     });
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("saving")));
+    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(
+        FridayLocalizations.of(context).noticeSave
+    )));
   }
 }

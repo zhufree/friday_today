@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-04-09T10:47:41.204933",
+  "@@last_modified": "2019-04-13T16:27:18.434485",
   "appName": "Is Today Friday?",
   "@appName": {
     "description": "Title for the Friday application",
@@ -202,8 +202,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "noticeDonation": "Go to target app, you can select qrcode in album to donate.",
-  "@noticeDonation": {
+  "noticeSave": "The QRcode has been saved to album.",
+  "@noticeSave": {
     "description": "",
     "type": "text",
     "placeholders": {}
@@ -228,10 +228,24 @@
     "type": "text",
     "placeholders": {}
   },
-  "titleDonation": "Long click qrcode to save in album.",
+  "noticeDonation": "Long click qrcode to save in album.",
+  "@noticeDonation": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "titleDonation": "Donate developer.",
   "@titleDonation": {
     "description": "",
     "type": "text",
     "placeholders": {}
+  },
+  "saveFailNotice": "Save failed : {reason}",
+  "@saveFailNotice": {
+    "description": "",
+    "type": "text",
+    "placeholders": {
+      "reason": {}
+    }
   }
 }
