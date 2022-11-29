@@ -56,7 +56,7 @@ class _FridayPageState extends State<FridayPage> {
   Color bubbleColor; // 气泡颜色
   Color textColor; // 文字颜色
   String colorName = "即刻黄";
-  bool showControlPanel = true;
+  bool showControlPanel = true; // 是否显示控制面板
   int screenType = 0; // 全屏/ 正方形
 
   DateTime today = DateTime.now();
@@ -395,7 +395,6 @@ class _FridayPageState extends State<FridayPage> {
       scaffoldKey.currentState.showSnackBar(new SnackBar(
         content: new Text(FridayLocalizations.of(context).saveFailNotice(e.toString())),
       ));
-      print(e.toString());
       return false;
     }
   }
